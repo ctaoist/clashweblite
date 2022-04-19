@@ -1,0 +1,114 @@
+name: Release
+on:
+  release:
+    types: [published]
+jobs:
+  release_darwin:
+    runs-on: macOS-latest
+    steps:
+      - name: CheckOut
+        uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.18.0'
+      - name: Downdload Clash
+        run: |
+          curl -O https://release.dreamacro.workers.dev/latest/clash-darwin-amd64-latest.gz
+          gzip -d clash-darwin-amd64-latest.gz
+          chmod a+x clash-darwin-amd64-latest
+          mv clash-darwin-amd64-latest App/clash-darwin-amd64
+      - name: Build ClashWeb
+        env:
+          CGO_LDFLAGS: "-g -O2 -s -w"
+        run: |
+          go build
+      - name: Packing
+        run: |
+          mkdir clashweb-darwin-amd64
+          mv clashweb clashweb-darwin-amd64/
+          cp -r App clashweb-darwin-amd64/
+          cp -r icon clashweb-darwin-amd64/
+          rm -rf clashweb-darwin-amd64/icon/icon.go
+          zip -r clashweb-darwin-amd64-${{github.event.release.tag_name}}.zip clashweb-darwin-amd64
+      - name: Uploading assets
+        if: ${{ !env.ACT }}
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./clashweb-darwin-amd64-${{github.event.release.tag_name}}.zip
+          asset_name: clashweb-darwin-amd64-${{github.event.release.tag_name}}.zip
+          asset_content_type: application/zip
+  release_linux_and_windows:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - goarch: amd64
+            goos: linux
+            zipsuffix: gz
+            unzipcommand: gzip -d
+            ldflags: "-g -O2 -s -w"
+            exesuffix: ''
+          - goarch: amd64
+            goos: windows
+            zipsuffix: zip
+            unzipcommand: unzip
+            ldflags: "-g -O2 -s -w -H=windowsgui"
+            exesuffix: '.exe'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Dependencies
+        run: sudo apt install -y --no-install-recommends gcc libgtk-3-dev libayatana-appindicator3-dev wget unzip zip
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.18.0'
+      - name: Downdload Clash
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          wget https://release.dreamacro.workers.dev/latest/clash-${{matrix.goos}}-${{matrix.goarch}}-latest.${{matrix.zipsuffix}}
+          ${{matrix.unzipcommand}} clash-${{matrix.goos}}-${{matrix.goarch}}-latest.${{matrix.zipsuffix}}
+      - name: Download Wintun.dll
+        if: ${{ matrix.goos == 'windows' }}
+        run: |
+          wget https://www.wintun.net/builds/wintun-0.14.1.zip
+          unzip wintun-0.14.1.zip
+          mv wintun/bin/amd64/wintun.dll App/
+      - name: Rename Clash exe
+        if: ${{ matrix.goos != 'windows' }}
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          mv clash-${{matrix.goos}}-${{matrix.goarch}}-latest clash-${{matrix.goos}}-${{matrix.goarch}}
+          chmod a+x clash-${{matrix.goos}}-${{matrix.goarch}}
+      - name: Build ClashWeb
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_LDFLAGS: ${{ matrix.ldflags }}
+        run: |
+          mv clash-${{matrix.goos}}-${{matrix.goarch}}${{matrix.exesuffix}} App/
+          rm -rf clash-${{matrix.goos}}-${{matrix.goarch}}-latest.${{matrix.zipsuffix}}
+          go build
+          mkdir clashweb-${{matrix.goos}}-${{matrix.goarch}}
+          mv clashweb${{matrix.exesuffix}} clashweb-${{matrix.goos}}-${{matrix.goarch}}/
+          cp -r App clashweb-${{matrix.goos}}-${{matrix.goarch}}/
+          rm -rf App/clash-${{matrix.goos}}-${{matrix.goarch}}${{matrix.exesuffix}}
+          cp -r icon clashweb-${{matrix.goos}}-${{matrix.goarch}}/
+          rm -rf clashweb-${{matrix.goos}}-${{matrix.goarch}}/icon/icon.go
+          zip -r clashweb-${{matrix.goos}}-${{matrix.goarch}}-${{github.event.release.tag_name}}.zip clashweb-${{matrix.goos}}-${{matrix.goarch}}
+      - name: Uploading assets
+        if: ${{ !env.ACT }}
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./clashweb-${{matrix.goos}}-${{matrix.goarch}}-${{github.event.release.tag_name}}.zip
+          asset_name: clashweb-${{matrix.goos}}-${{matrix.goarch}}-${{github.event.release.tag_name}}.zip
+          asset_content_type: application/zip

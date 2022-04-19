@@ -1,0 +1,14 @@
+*.exe
+*.dll
+/releases
+App/*
+!App/ui
+!App/ruleset
+!App/config.yaml
+/ico.mainfest
+/build.txt
+/utils/dbus-send.txt
+*.code-workspace
+/screenshots/*
+!/screenshots/preview.png
+!/screenshots/local9090.png

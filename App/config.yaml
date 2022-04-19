@@ -1,0 +1,85 @@
+mixed-port: 7890
+allow-lan: true
+log-level: info
+ipv6: false # When set to false, resolver won't translate hostnames to IPv6 addresses
+
+external-controller: 127.0.0.1:9090 # RESTful web API listening address
+external-ui: ui/razord
+
+dns:
+  enable: false
+  ipv6: false
+  nameserver:
+    - 114.114.114.114
+
+# Clash router working mode
+# rule: rule-based packet routing
+# global: all packets will be forwarded to a single endpoint
+# direct: directly forward the packets to the Internet
+mode: rule
+
+proxy-providers:
+  name:
+    type: http
+    url: url
+    interval: 86400
+    path: file.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+
+proxy-groups:
+  - name: Proxy
+    type: select
+    use:
+      - proxy-providers.name
+
+rule-providers:
+  user:
+    type: file
+    behavior: classical
+    path: ./ruleset/user.yaml
+  local:
+    type: file
+    behavior: classical
+    path: ./ruleset/local.yaml
+  reject:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
+    path: ./ruleset/reject.yaml
+    interval: 86400
+
+  proxy:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
+    path: ./ruleset/proxy.yaml
+    interval: 86400
+
+  gfw:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
+    path: ./ruleset/gfw.yaml
+    interval: 86400
+
+  direct:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
+    path: ./ruleset/direct.yaml
+    interval: 86400
+
+rules:
+  - RULE-SET,user,Proxy
+  - RULE-SET,local,DIRECT
+  - DOMAIN,clash.razord.top,DIRECT
+  - DOMAIN,yacd.haishan.me,DIRECT
+  - RULE-SET,direct,DIRECT
+  - RULE-SET,reject,REJECT
+  - RULE-SET,proxy,Proxy
+  - RULE-SET,gfw,Proxy
+  - MATCH,Proxy
