@@ -4,7 +4,7 @@
 
 ClashWeb is a cross-platform lightweighted wrapper for [Clash Premium](https://github.com/Dreamacro/clash/releases/tag/premium) on Desktop environment.
 
-[![build](https://img.shields.io/github/workflow/status/ctaoist/clashweb/Release)](https://github.com/ctaoist/clash/actions) [![GitHub license](https://img.shields.io/github/license/ctaoist/clashweb.svg)](https://github.com/ctaoist/clashweb/blob/master/LICENSE)
+[![build](https://img.shields.io/github/workflow/status/ctaoist/clashweb/Release)](https://github.com/ctaoist/clashweb/actions) [![GitHub license](https://img.shields.io/github/license/ctaoist/clashweb.svg)](https://github.com/ctaoist/clashweb/blob/master/LICENSE)
 
 ![](screenshots/preview.png)
 
@@ -22,6 +22,14 @@ http://127.0.0.1:9090/ui:
 - Update Clash Premium
 
 >Note: The TUN mode of the Clash Premium need **root or administrator privilege**.
+
+## Usage
+
+1. Download ClashWeb from [Releases](https://github.com/ctaoist/clashweb/releases)
+2. Edit clash config.yaml
+3. Run ClashWeb
+
+>With First running, the Clash Premium need to download Country.mmdb, ~6Mb.
 
 ## Install
 
