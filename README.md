@@ -1,8 +1,8 @@
 <div align="center">
 
-# ClashWeb
+# ClashWebLite
 
-ClashWeb is a cross-platform lightweighted wrapper for [Clash Premium](https://github.com/Dreamacro/clash/releases/tag/premium) on Desktop environment.
+ClashWebLite is a cross-platform lightweighted wrapper for [Clash Premium](https://github.com/Dreamacro/clash/releases/tag/premium) on Desktop environment.
 
 [![build](https://img.shields.io/github/workflow/status/ctaoist/clashweb/Release)](https://github.com/ctaoist/clashweb/actions) [![GitHub license](https://img.shields.io/github/license/ctaoist/clashweb.svg)](https://github.com/ctaoist/clashweb/blob/master/LICENSE)
 
@@ -26,9 +26,9 @@ http://127.0.0.1:9090/ui:
 
 ## Usage
 
-1. Download ClashWeb from [Releases](https://github.com/ctaoist/clashweb/releases)
+1. Download ClashWebLite from [Releases](https://github.com/ctaoist/clashweblite/releases)
 2. Edit clash config.yaml
-3. Run ClashWeb
+3. Run ClashWebLite
 
 >With First running, the Clash Premium need to download Country.mmdb, ~6Mb.
 
@@ -36,7 +36,7 @@ http://127.0.0.1:9090/ui:
 
 ### Pre-compiled
 
-[Releases](https://github.com/ctaoist/clashweb/releases)
+[Releases](https://github.com/ctaoist/clashweblite/releases)
 
 ### From source code
 
@@ -91,4 +91,4 @@ When running as an app bundle, you may want to add one or both of the following 
 
 ## License
 
-This software is released under the [GPL3.0](https://github.com/ctaoist/clashweb/blob/master/LICENSE) license.
+This software is released under the [GPL3.0](https://github.com/ctaoist/clashweblite/blob/master/LICENSE) license.
