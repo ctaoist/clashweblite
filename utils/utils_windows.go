@@ -28,7 +28,7 @@ func OpenFolder(file string) {
 
 // 检查是否开机启动
 func CheckStartup() bool {
-	out, _ := Exec("reg", "query", reg_addr, "/v", "clashweb")
+	out, _ := Exec("reg", "query", reg_addr)
 	return strings.Contains(out, "clashweb")
 }
 

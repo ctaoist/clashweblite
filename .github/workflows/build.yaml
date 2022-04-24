@@ -13,15 +13,17 @@ jobs:
           go-version: '>=1.18.0'
       - name: Downdload Clash
         run: |
+          curl -O https://gist.githubusercontent.com/ctaoist/227550cd402cffb7796436f4c1fb82f7/raw/004cc6e940f87d50d0b8975edb215b6d54ea8e5f/go_build.sh
+          chmod a+x go_build.sh
           curl -O https://release.dreamacro.workers.dev/latest/clash-darwin-amd64-latest.gz
           gzip -d clash-darwin-amd64-latest.gz
           chmod a+x clash-darwin-amd64-latest
           mv clash-darwin-amd64-latest App/clash-darwin-amd64
       - name: Build ClashWeb
         env:
-          CGO_LDFLAGS: "-g -O2 -s -w"
+          LDFLAGS: "-s -w -X 'main.clashWebVersion=${{github.event.release.tag_name}}'"
         run: |
-          go build
+          ./go_build.sh
       - name: Packing
         run: |
           mkdir clashweb-darwin-amd64
@@ -49,13 +51,13 @@ jobs:
             goos: linux
             zipsuffix: gz
             unzipcommand: gzip -d
-            ldflags: "-g -O2 -s -w"
+            ldflags: "-s -w -X 'main.clashWebVersion=${{github.event.release.tag_name}}'"
             exesuffix: ''
           - goarch: amd64
             goos: windows
             zipsuffix: zip
             unzipcommand: unzip
-            ldflags: "-g -O2 -s -w -H=windowsgui"
+            ldflags: "-s -w -H=windowsgui -X 'main.clashWebVersion=${{github.event.release.tag_name}}'"
             exesuffix: '.exe'
     steps:
       - name: Checkout
@@ -90,11 +92,13 @@ jobs:
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
-          CGO_LDFLAGS: ${{ matrix.ldflags }}
+          LDFLAGS: ${{ matrix.ldflags }}
         run: |
           mv clash-${{matrix.goos}}-${{matrix.goarch}}${{matrix.exesuffix}} App/
           rm -rf clash-${{matrix.goos}}-${{matrix.goarch}}-latest.${{matrix.zipsuffix}}
-          go build
+          wget https://gist.githubusercontent.com/ctaoist/227550cd402cffb7796436f4c1fb82f7/raw/004cc6e940f87d50d0b8975edb215b6d54ea8e5f/go_build.sh
+          chmod a+x go_build.sh
+          ./go_build.sh
           mkdir clashweb-${{matrix.goos}}-${{matrix.goarch}}
           mv clashweb${{matrix.exesuffix}} clashweb-${{matrix.goos}}-${{matrix.goarch}}/
           cp -r App clashweb-${{matrix.goos}}-${{matrix.goarch}}/

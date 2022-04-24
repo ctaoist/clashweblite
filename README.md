@@ -20,6 +20,7 @@ http://127.0.0.1:9090/ui:
 - Startup after operating-system reboot
 - Set system proxy
 - Update Clash Premium
+- Change the WebUI: yacd/razord
 
 >Note: The TUN mode of the Clash Premium need **root or administrator privilege**.
 
