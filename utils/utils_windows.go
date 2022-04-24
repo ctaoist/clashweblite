@@ -23,7 +23,7 @@ var (
 // 打开文件夹
 func OpenFolder(file string) {
 	fpath := strings.ReplaceAll(file, "/", "\\")
-	Exec("explorer", "/select,", fpath)
+	exec.Command("explorer", "/select,", fpath).CombinedOutput()
 }
 
 // 检查是否开机启动
