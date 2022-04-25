@@ -42,7 +42,7 @@ func main() {
 func onReady() {
 	systray.SetIcon(icon.Data)
 	systray.SetTooltip("ClashWeb")
-	mStartup := systray.AddMenuItemCheckbox("Startup", "Startup ClashWeb", false)
+	mStartup := systray.AddMenuItemCheckbox("Startup", "Startup ClashWebLite", false)
 	mSystemProxy := systray.AddMenuItemCheckbox("System Proxy", "System Proxy", false)
 
 	systray.AddSeparator()

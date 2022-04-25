@@ -119,5 +119,7 @@ func GetSysProcAttr() *syscall.SysProcAttr {
 //github.com/gen2brain/beeep
 // Msg 通知消息
 func Msg(msg string) {
-	exec.Command("osascript", "-e", `display notification "`+msg+`" with title "ClashWeb" sound name "Default"`).Run()
+	c := exec.Command("osascript", "-e", `display notification "`+msg+`" with title "ClashWeb" sound name "Default"`)
+	c.SysProcAttr = GetSysProcAttr()
+	c.Run()
 }

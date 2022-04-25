@@ -134,5 +134,7 @@ func GetSysProcAttr() *syscall.SysProcAttr {
 // githbub.com beeep
 // https://wiki.archlinux.org/title/Desktop_notifications
 func Msg(msg string) {
-	exec.Command("gdbus", "call", "--session", "--dest=org.freedesktop.Notifications", "--object-path=/org/freedesktop/Notifications", "--method=org.freedesktop.Notifications.Notify", "", "0", CurrentWorkDir+"/icon/enable.png", "ClashWeb", msg, "[]", `{"urgency":<1>,"sound-name":<"default">}`, "0").Run()
+	c := exec.Command("gdbus", "call", "--session", "--dest=org.freedesktop.Notifications", "--object-path=/org/freedesktop/Notifications", "--method=org.freedesktop.Notifications.Notify", "", "0", CurrentWorkDir+"/icon/enable.png", "ClashWeb", msg, "[]", `{"urgency":<1>,"sound-name":<"default">}`, "0")
+	c.SysProcAttr = GetSysProcAttr()
+	c.Run()
 }

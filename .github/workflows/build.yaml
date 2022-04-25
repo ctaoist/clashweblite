@@ -51,7 +51,7 @@ jobs:
             goos: linux
             zipsuffix: gz
             unzipcommand: gzip -d
-            ldflags: "-s -w -X 'main.clashWebVersion=${{github.event.release.tag_name}}'"
+            ldflags: "-s -w -X 'main.clashWebVersion=${{github.event.release.tag_name}}'" # --extldflags '-static -fpic'
             exesuffix: ''
           - goarch: amd64
             goos: windows

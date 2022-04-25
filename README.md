@@ -32,6 +32,12 @@ http://127.0.0.1:9090/ui:
 
 >With First running, the Clash Premium need to download Country.mmdb, ~6Mb.
 
+## Dependencies
+
+### Linux
+
+- libayatana-appindicator
+
 ## Install
 
 ### Pre-compiled

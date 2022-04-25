@@ -99,5 +99,7 @@ func GetSysProcAttr() *syscall.SysProcAttr {
 }
 
 func Msg(msg string) {
-	exec.Command("msg", UserName, msg).Run()
+	c := exec.Command("msg", UserName, msg)
+	c.SysProcAttr = GetSysProcAttr()
+	c.Run()
 }
