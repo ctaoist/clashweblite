@@ -19,9 +19,9 @@ import (
 	"strconv"
 	"strings"
 
-	// "syscall"
 	"net/http"
 	"net/url"
+	// "syscall"
 
 	"gopkg.in/yaml.v2"
 )
@@ -93,7 +93,9 @@ func init() {
 
 // 执行命令，如果出错并弹出程序输出
 func Exec(exe string, args ...string) (string, error) {
-	b, e := exec.Command(exe, args...).CombinedOutput()
+	c := exec.Command(exe, args...)
+	c.SysProcAttr = GetSysProcAttr()
+	b, e := c.CombinedOutput()
 	var s string
 	if runtime.GOOS == "windows" {
 		s = string(GbkToUtf8(b))
