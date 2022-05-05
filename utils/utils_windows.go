@@ -60,7 +60,7 @@ func SetClashStartup(enable bool) bool {
 func SetSystemProxy(enable bool) bool {
 	var err error
 	if enable {
-		err = gosysproxy.SetGlobalProxy("127.0.0.1:" + strconv.Itoa(ClashConfig.MixedPort))
+		err = gosysproxy.SetGlobalProxy("127.0.0.1:" + strconv.Itoa(ClashPort))
 	} else {
 		err = gosysproxy.Off()
 	}

@@ -101,7 +101,7 @@ Type=Application`
 // linux and mac 设置系统代理 https://mrjun.cn/Dy4ALDFDO/
 func SetSystemProxy(enable bool) bool {
 	proxies := []string{"http", "https", "socks"}
-	port := strconv.Itoa(ClashConfig.MixedPort)
+	port := strconv.Itoa(ClashPort)
 
 	var e error
 	for _, proxy := range proxies {

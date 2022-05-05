@@ -33,7 +33,12 @@ type Downloader struct {
 }
 
 type ClashConf struct {
-	MixedPort int `yaml:"mixed-port"`
+	MixedPort   int    `yaml:"mixed-port"`
+	Port        int    `yaml:"port"`
+	SocksPort   int    `yaml:"socks-port"`
+	RedirPort   int    `yaml:"redir-port"`
+	TproxyPort  int    `yaml:"tproxy-port"`
+	BindAddress string `yaml:"bind-address"`
 }
 
 var (
@@ -43,10 +48,11 @@ var (
 	DownZipSuffix string // "zip" or "gz"
 
 	ClashUpdateCh  = make(chan int)
-	ClashAppDir    string    // Clash Premium Dir
-	ClashConfig    ClashConf // Clash Premium config struct
-	CurrentWorkDir string
-	ClashWebExe    string // path_to_clashweb
+	ClashAppDir    string        // Clash Premium Dir
+	ClashConfig    = ClashConf{} // Clash Premium config struct
+	ClashPort      int           // 系统代理使用的端口
+	CurrentWorkDir string        //
+	ClashWebExe    string        // path_to_clashweb
 	// rkey registry.Key
 )
 
@@ -77,7 +83,9 @@ func init() {
 	} else {
 		DownZipSuffix = "gz"
 	}
+}
 
+func ReadConfig() {
 	b, e := ioutil.ReadFile(ClashAppDir + "/config.yaml")
 	if e != nil {
 		Msg(e.Error())
@@ -88,7 +96,19 @@ func init() {
 		Msg(e.Error())
 		panic(e)
 	}
-
+	if ClashConfig.MixedPort > 0 {
+		ClashPort = ClashConfig.MixedPort
+	} else if ClashConfig.Port > 0 {
+		ClashPort = ClashConfig.Port
+	} else if ClashConfig.SocksPort > 0 {
+		ClashPort = ClashConfig.SocksPort
+	} else if ClashConfig.RedirPort > 0 {
+		ClashPort = ClashConfig.RedirPort
+	} else if ClashConfig.TproxyPort > 0 {
+		ClashPort = ClashConfig.TproxyPort
+	} else {
+		ClashPort = 80
+	}
 }
 
 // 执行命令，如果出错并弹出程序输出

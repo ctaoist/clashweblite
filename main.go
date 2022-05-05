@@ -145,7 +145,9 @@ func onExit() {
 }
 
 func execClash(args ...string) *exec.Cmd {
-	return exec.Command(utils.ClashAppDir+"/clash-"+runtime.GOOS+"-amd64", args...)
+	c := exec.Command(utils.ClashAppDir+"/clash-"+runtime.GOOS+"-amd64", args...)
+	c.SysProcAttr = utils.GetSysProcAttr()
+	return c
 }
 
 func stopClash() {
@@ -155,8 +157,8 @@ func stopClash() {
 }
 
 func startClash() {
+	utils.ReadConfig()
 	clash = execClash("-d", utils.ClashAppDir)
-	clash.SysProcAttr = utils.GetSysProcAttr()
 	clash.Start()
 	isClashRunning = true
 }
@@ -220,10 +222,10 @@ func checkClashUpdate() {
 			}
 			startClash()
 			clashCurVersion = newVersion
+			utils.Msg("更新 Clash 成功")
 		} else {
 			utils.Msg("更新 Clash 失败")
 		}
-		utils.Msg("更新 Clash 成功")
 	} else {
 		utils.Msg("Clash 已经是最新，不用更新")
 	}

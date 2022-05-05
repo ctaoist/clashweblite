@@ -75,7 +75,7 @@ func SetSystemProxy(enable bool) bool {
 	}
 	ignoreNetService := []string{"Serial", "Iphone", "Ipad", "Bluetooth", "*"}
 	proxies := []string{"-setwebproxy", "-setsecurewebproxy", "-setsocksfirewallproxy"}
-	port := strconv.Itoa(ClashConfig.MixedPort)
+	port := strconv.Itoa(ClashPort)
 
 	for _, networkservice := range strings.Split(string(o), "\n") {
 		if func() bool {
