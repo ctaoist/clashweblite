@@ -127,6 +127,9 @@ func SetSystemProxy(enable bool) bool {
 	return true
 }
 
+// 获取系统代理
+func GetSystemProxy() {}
+
 func GetSysProcAttr() *syscall.SysProcAttr {
 	return &syscall.SysProcAttr{Setpgid: true}
 }

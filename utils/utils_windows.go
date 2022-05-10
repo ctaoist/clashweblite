@@ -4,6 +4,8 @@
 package utils
 
 import (
+	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"strconv"
@@ -17,7 +19,7 @@ import (
 
 var (
 	// reg_addr = "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"
-	reg_addr = "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"
+	reg_addr = "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion"
 )
 
 // 打开文件夹
@@ -28,7 +30,7 @@ func OpenFolder(file string) {
 
 // 检查是否开机启动
 func CheckStartup() bool {
-	out, _ := Exec("reg", "query", reg_addr)
+	out, _ := Exec("reg", "query", reg_addr+"\\Run")
 	return strings.Contains(out, "clashweb")
 }
 
@@ -70,6 +72,26 @@ func SetSystemProxy(enable bool) bool {
 		return false
 	}
 	return true
+}
+
+// 获取系统代理
+func GetSystemProxy() {
+	out, _ := Exec("reg", "query", reg_addr+"\\Internet Settings")
+	for _, l := range strings.Split(out, "\n") {
+		l = strings.TrimSpace(l)
+		if !strings.HasPrefix(l, "ProxyEnable") {
+			continue
+		}
+		if strings.HasPrefix(l, "ProxyEnable") && (l[len(l)-1] == '1') && (len(ClashScheme) > 0) {
+			if u, e := url.Parse(ClashScheme + "://127.0.0.1:" + strconv.Itoa(ClashPort)); e == nil {
+				HttpClient = &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(u)}}
+			} else {
+				Msg(e.Error())
+			}
+		} else {
+			HttpClient = &http.Client{}
+		}
+	}
 }
 
 // https://stackoverflow.com/questions/31558066/how-to-ask-for-administer-privileges-on-windows-with-go

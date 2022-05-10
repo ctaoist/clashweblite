@@ -19,7 +19,7 @@ http://127.0.0.1:9090/ui:
 - Supported on Windows, MacOS, and Linux
 - Startup after operating-system reboot
 - Set system proxy
-- Update Clash Premium
+- Update Clash Premium(using system proxy)
 - Change the WebUI: yacd/razord
 
 >Note: The TUN mode of the Clash Premium need **root or administrator privilege**.
@@ -37,6 +37,17 @@ http://127.0.0.1:9090/ui:
 ### Linux
 
 - libayatana-appindicator
+
+## Update WebUI
+
+You can manually download the webui zip file or by `git`:
+
+1. Stop the clash
+2. `cd path/clashweb_folder/App/ui`
+3. delete what you want to update
+4. `git clone -b gh-pages --depth=1 https://github.com/Dreamacro/clash-dashboard.git razord`: update the razord
+5. or `git clone -b gh-pages --depth=1 https://github.com/haishanh/yacd.git yacd`: update the yacd
+6. Start the clash
 
 ## Install
 

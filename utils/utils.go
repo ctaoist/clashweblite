@@ -51,6 +51,7 @@ var (
 	ClashAppDir    string        // Clash Premium Dir
 	ClashConfig    = ClashConf{} // Clash Premium config struct
 	ClashPort      int           // 系统代理使用的端口
+	ClashScheme    string        // 系统代理使用的协议
 	CurrentWorkDir string        //
 	ClashWebExe    string        // path_to_clashweb
 	// rkey registry.Key
@@ -98,10 +99,13 @@ func ReadConfig() {
 	}
 	if ClashConfig.MixedPort > 0 {
 		ClashPort = ClashConfig.MixedPort
+		ClashScheme = "http"
 	} else if ClashConfig.Port > 0 {
 		ClashPort = ClashConfig.Port
+		ClashScheme = "http"
 	} else if ClashConfig.SocksPort > 0 {
 		ClashPort = ClashConfig.SocksPort
+		ClashScheme = "socks"
 	} else if ClashConfig.RedirPort > 0 {
 		ClashPort = ClashConfig.RedirPort
 	} else if ClashConfig.TproxyPort > 0 {
