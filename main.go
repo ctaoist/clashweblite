@@ -49,6 +49,7 @@ func onReady() {
 	mOpenConfig := systray.AddMenuItem("Edit Clash config.yaml", "Open Clash config.yaml folder")
 	mOpenUserConfig := systray.AddMenuItem("Edit Clash user.yaml", "Open Clash user.yaml folder")
 	mStopClash := systray.AddMenuItem("Stop Clash", "Stop or Start ClashWeb")
+	mRefresh := systray.AddMenuItem("Refresh Config", "Refresh Clsh Config")
 	mUpdate := systray.AddMenuItem("Update", "Update Clash")
 
 	systray.AddSeparator()
@@ -113,6 +114,11 @@ func onReady() {
 						mSystemProxy.Uncheck()
 					} // off system proxy
 					systray.SetIcon(icon.ReadIconFile(utils.CurrentWorkDir + "/icon/disable." + icon.IconSuffix))
+				}
+			case <- mRefresh.ClickedCh:
+				_, b := utils.Request("PUT", "http://127.0.0.1:9090/configs", url.Values{"path": []string{utils.ClashAppDir + "/config.yaml"}}, map[string]string{"Content-Type": "application/json"})
+				if len(b) > 0 {
+					utils.Msg(string(b))
 				}
 			case <-mUpdate.ClickedCh:
 				mUpdate.SetTitle("Updating...")

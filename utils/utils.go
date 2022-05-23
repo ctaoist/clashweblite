@@ -1,28 +1,21 @@
 package utils
 
 import (
-	"runtime"
-
-	"golang.org/x/text/encoding/simplifiedchinese"
-	"golang.org/x/text/transform"
-
 	"bytes"
 	"io"
 	"io/ioutil"
+	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"os/user"
-
-	// "fmt"
-	// "os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 
-	"net/http"
-	"net/url"
-	// "syscall"
-
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
 	"gopkg.in/yaml.v2"
 )
 
@@ -71,7 +64,6 @@ func (d *Downloader) Read(p []byte) (n int, err error) {
 func init() {
 	ClashWebExe, _ := os.Executable()
 	CurrentWorkDir = filepath.Dir(ClashWebExe)
-	ClashAppDir = CurrentWorkDir + "/App"
 
 	CurUser, _ = user.Current()
 	UserName = func(u string) string {
@@ -80,8 +72,10 @@ func init() {
 	}(CurUser.Username)
 
 	if runtime.GOOS == "windows" {
+		ClashAppDir = CurrentWorkDir + "\\App"
 		DownZipSuffix = "zip"
 	} else {
+		ClashAppDir = CurrentWorkDir + "/App"
 		DownZipSuffix = "gz"
 	}
 }
@@ -152,7 +146,16 @@ func GbkToUtf8(s []byte) []byte {
 
 func Request(method, url string, query url.Values, headers map[string]string) (int64, []byte) {
 	req, _ := http.NewRequest(method, url, nil)
-	req.URL.RawQuery = query.Encode()
+	if method == "PUT" {
+		data := `{`
+		for k, v := range query {
+			data += `"` + k + `":` + strconv.Quote(v[0]) + `,` // strcov.Quote 保留\\,自带"
+		}
+		data = data[:len(data)-1] + `}`
+		req, _ = http.NewRequest(method, url, strings.NewReader(data))
+	} else {
+		req.URL.RawQuery = query.Encode()
+	}
 
 	for k, v := range headers {
 		req.Header.Set(k, v)

@@ -13,7 +13,7 @@ import (
 	"syscall"
 
 	"github.com/Trisia/gosysproxy"
-	"golang.org/x/sys/windows"
+	// "golang.org/x/sys/windows"
 	// "golang.org/x/sys/windows/registry"
 )
 
@@ -91,30 +91,31 @@ func GetSystemProxy() {
 		} else {
 			HttpClient = &http.Client{}
 		}
+		break
 	}
 }
 
 // https://stackoverflow.com/questions/31558066/how-to-ask-for-administer-privileges-on-windows-with-go
 // 提权运行Command
-func RunElevated(exe, args string) bool {
-	verb := "runas"
-	// cwd, _ := os.Getwd()
-	// args := strings.Join(os.Args[1:], " ")
+// func RunElevated(exe, args string) bool {
+// 	verb := "runas"
+// 	// cwd, _ := os.Getwd()
+// 	// args := strings.Join(os.Args[1:], " ")
 
-	verbPtr, _ := syscall.UTF16PtrFromString(verb)
-	exePtr, _ := syscall.UTF16PtrFromString(exe)
-	cwdPtr, _ := syscall.UTF16PtrFromString(CurrentWorkDir)
-	argPtr, _ := syscall.UTF16PtrFromString(args)
+// 	verbPtr, _ := syscall.UTF16PtrFromString(verb)
+// 	exePtr, _ := syscall.UTF16PtrFromString(exe)
+// 	cwdPtr, _ := syscall.UTF16PtrFromString(CurrentWorkDir)
+// 	argPtr, _ := syscall.UTF16PtrFromString(args)
 
-	var showCmd int32 = 1 //SW_NORMAL
+// 	var showCmd int32 = 1 //SW_NORMAL
 
-	err := windows.ShellExecute(0, verbPtr, exePtr, argPtr, cwdPtr, showCmd)
-	if err != nil {
-		Msg(err.Error())
-		return false
-	}
-	return true
-}
+// 	err := windows.ShellExecute(0, verbPtr, exePtr, argPtr, cwdPtr, showCmd)
+// 	if err != nil {
+// 		Msg(err.Error())
+// 		return false
+// 	}
+// 	return true
+// }
 
 func GetSysProcAttr() *syscall.SysProcAttr {
 	return &syscall.SysProcAttr{HideWindow: true}
