@@ -39,13 +39,13 @@ func SetClashStartup(enable bool) bool {
 	var e error
 	if enable {
 		exe, _ := os.Executable()
-		Exec("reg", "add", reg_addr, "/v", "clashweb", "/t", "REG_SZ", "/d", `"`+exe+`"`, "/f")
+		Exec("reg", "add", reg_addr+"\\Run", "/v", "clashweb", "/t", "REG_SZ", "/d", `"`+exe+`"`, "/f")
 		// e = exec.Command("reg", "add", reg_addr, "/v", "clashweb", "/t", "REG_SZ", "/d", `"`+exe+`"`, "/f").Run()
 		// if runElevated("reg", "add "+reg_addr+" /t REG_SZ /d \""+exe+"\" /f") {
 		//     return true
 		// }
 	} else {
-		Exec("reg", "delete", reg_addr, "/v", "clashweb", "/f")
+		Exec("reg", "delete", reg_addr+"\\Run", "/v", "clashweb", "/f")
 		// e = exec.Command("reg", "delete", reg_addr, "/v", "clashweb", "/f").Run()
 		// if runElevated("reg", "delete "+reg_addr+" /v clashweb /f") {
 		//     return true
